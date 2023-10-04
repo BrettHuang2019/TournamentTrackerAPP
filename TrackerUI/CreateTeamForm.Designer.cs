@@ -102,6 +102,7 @@
             selectTeamMemberDropdown.Name = "selectTeamMemberDropdown";
             selectTeamMemberDropdown.Size = new Size(276, 23);
             selectTeamMemberDropdown.TabIndex = 18;
+            selectTeamMemberDropdown.SelectedIndexChanged += selectTeamMemberDropdown_SelectedIndexChanged;
             // 
             // selectTeamMemberLabel
             // 

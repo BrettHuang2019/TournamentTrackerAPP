@@ -17,11 +17,14 @@ namespace TrackerUI
         private BindingList<PersonModel> avaliableTeamMembers = new BindingList<PersonModel>(GlobalConfig.Connection.GetPerson_All());
         private BindingList<PersonModel> selectedTeamMembers = new BindingList<PersonModel>();
 
-        public CreateTeamForm()
+        ITeamRequester callingForm;
+
+        public CreateTeamForm(ITeamRequester callingForm)
         {
             InitializeComponent();
             //CreateSampleData();
             WireUpLists();
+            this.callingForm = callingForm;
         }
 
         private void CreateSampleData()
@@ -52,7 +55,7 @@ namespace TrackerUI
                 person.EmailAddress = emailValue.Text;
                 person.CellphoneNumber = cellphoneValue.Text;
 
-                person = GlobalConfig.Connection.CreatePersonModel(person);
+                GlobalConfig.Connection.CreatePersonModel(person);
                 selectedTeamMembers.Add(person);
 
                 firstNameValue.Text = "";
@@ -98,15 +101,21 @@ namespace TrackerUI
 
         private void createTeamButton_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(teamNameValue.Text.Trim() )|| selectedTeamMembers.Count <= 0) return; 
+            if (string.IsNullOrEmpty(teamNameValue.Text.Trim()) || selectedTeamMembers.Count <= 0) return;
 
             TeamModel model = new TeamModel();
             model.TeamName = teamNameValue.Text;
             model.TeamMembers = selectedTeamMembers.ToList();
-            
+
             GlobalConfig.Connection.CreateTeamModel(model);
 
-            // TODO: Reset the form if not closing.
+            callingForm.TeamComplete(model);
+            this.Close();
+        }
+
+        private void selectTeamMemberDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
